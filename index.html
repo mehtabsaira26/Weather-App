@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+
+	<title>Weather App</title>
+	<link rel="icon" href="images/logo.png" type="image">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" type="text/css" href="css/weather-icons-wind.css">
+	<link rel="stylesheet" type="text/css" href="css/weather-icons-wind.min.css">
+	<link rel="stylesheet" type="text/css" href="css/weather-icons.css">
+	<link rel="stylesheet" type="text/css" href="css/weather-icons.min.css">
+
+	<link href="https://fonts.googleapis.com/css?family=Sawarabi+Mincho" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h2> Weather <i class="fas fa-cloud"></i> App</h2>
+            </header>
+
+
+
+	<div class="container" style="height:650px;">
+		<div class="row">
+			<div id="searching">
+					<a href="forecast.html"> <img src="images/icons8-sun-100.png" height="50px"> Forecast</a> 
+				<h1> <i class="fas fa-cloud"></i> Get Current Weather Information <i class="fas fa-cloud"></i> </h1>
+				<h3>Enter City Name</h3>
+				<span id="error" ></span>
+			</div>
+
+			<div class="row form-group form-inline" id="cityDiv">
+
+				<input type="text" name="city" id="city" class="form-control" placeholder="Enter city name" onkeydown="if(event.keyCode == 13)document.getElementById('submitCity').click()">
+				<button id="submitCity" onclick="getWeather()">Search City</button>
+			</div>
+
+			<div id="showWeather">
+				<div class="weather-info">
+					
+					<h2 class="city-name"></h2>
+					<div id="icon"><img id="wicon" src="" alt="Weather icon"></div>
+					<h3 class="temp"><span></span>°</h3>
+					<p class="description"></p>
+					<p class="temp-range"><span class="min"></span>°/<span class="max"></span>°</p>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+    <footer>
+        Saira Mehtab <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjY0cHgiIGhlaWdodD0iNjRweCIgdmlld0JveD0iMCAwIDYxMiA2MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDYxMiA2MTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8ZyBpZD0idGFnLWZhY2VzIj4KCQk8cGF0aCBkPSJNNDMzLjUsMjgwLjVjMTUuMywwLDI1LjUtMTAuMiwyNS41LTI1LjVzLTEwLjItMjUuNS0yNS41LTI1LjVTNDA4LDIzOS43LDQwOCwyNTVTNDE4LjIsMjgwLjUsNDMzLjUsMjgwLjV6IE0zODIuNSw0MDggICAgYzQ4LjQ1LDAsODYuNy0zMy4xNSw5Ni45LTc2LjVIMjg1LjZDMjk1LjgsMzc0Ljg1LDMzNC4wNSw0MDgsMzgyLjUsNDA4eiBNMzMxLjUsMjgwLjVjMTUuMywwLDI1LjUtMTAuMiwyNS41LTI1LjUgICAgcy0xMC4yLTI1LjUtMjUuNS0yNS41UzMwNiwyMzkuNywzMDYsMjU1UzMxNi4yLDI4MC41LDMzMS41LDI4MC41eiBNNTYxLDc2LjVIMTkzLjhjLTE1LjMsMC0zMC42LDcuNjUtNDAuOCwyMC40TDAsMzA2bDE1MywyMDkuMSAgICBjMTAuMiwxMi43NSwyNS41LDIwLjQsNDAuOCwyMC40SDU2MWMyOC4wNSwwLDUxLTIyLjk1LDUxLTUxdi0zNTdDNjEyLDk5LjQ1LDU4OS4wNSw3Ni41LDU2MSw3Ni41eiBNMTAyLDMzMS41ICAgIGMtMTUuMywwLTI1LjUtMTAuMi0yNS41LTI1LjVzMTAuMi0yNS41LDI1LjUtMjUuNXMyNS41LDEwLjIsMjUuNSwyNS41UzExNy4zLDMzMS41LDEwMiwzMzEuNXogTTM4Mi41LDQ1OSAgICBjLTg0LjE1LDAtMTUzLTY4Ljg1LTE1My0xNTNjMC04NC4xNSw2OC44NS0xNTMsMTUzLTE1M2M4NC4xNSwwLDE1Myw2OC44NSwxNTMsMTUzQzUzNS41LDM5MC4xNSw0NjYuNjUsNDU5LDM4Mi41LDQ1OXoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" margin: 20px;/>
+     </footer>
+
+	
+	<script src="main.js"></script>   
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>        
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+	
+</body>
+</html>
